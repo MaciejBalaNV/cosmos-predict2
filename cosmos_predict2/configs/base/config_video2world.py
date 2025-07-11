@@ -101,7 +101,7 @@ PREDICT2_VIDEO2WORLD_NET_2B = L(MinimalV1LVGDiT)(
     concat_padding_mask=True,
     # attention settings
     model_channels=2048,
-    num_blocks=28,
+    num_blocks=22,
     num_heads=16,
     atten_backend="minimal_a2a",
     # positional embedding settings

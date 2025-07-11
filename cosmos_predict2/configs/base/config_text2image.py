@@ -72,7 +72,7 @@ PREDICT2_TEXT2IMAGE_NET_2B = L(MiniTrainDIT)(
     concat_padding_mask=True,
     # attention settings
     model_channels=2048,
-    num_blocks=28,
+    num_blocks=22,
     num_heads=16,
     mlp_ratio=4.0,
     # cross attention settings

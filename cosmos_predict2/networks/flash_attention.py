@@ -14,11 +14,12 @@
 # limitations under the License.
 
 import torch
-
+import os
+FA2_ONLY = bool(os.getenv("FA2_ONLY", 0))
 try:
     from flash_attn_3.flash_attn_interface import flash_attn_varlen_func
 
-    FLASH_ATTN_3_AVAILABLE = True
+    FLASH_ATTN_3_AVAILABLE = not FA2_ONLY
 except ModuleNotFoundError:
     FLASH_ATTN_3_AVAILABLE = False
 

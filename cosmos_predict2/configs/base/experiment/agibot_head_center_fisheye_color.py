@@ -51,8 +51,6 @@ dataloader_train_agibot_head_center_fisheye_color = L(DataLoader)(
     sampler=L(get_sampler)(dataset=example_video_dataset_agibot_head_center_fisheye_color_train),
     batch_size=1,
     drop_last=True,
-    num_workers=4,
-    pin_memory=True,
 )
 
 dataloader_val_agibot_head_center_fisheye_color = L(DataLoader)(
@@ -60,8 +58,6 @@ dataloader_val_agibot_head_center_fisheye_color = L(DataLoader)(
     sampler=L(get_sampler)(dataset=example_video_dataset_agibot_head_center_fisheye_color_val),
     batch_size=1,
     drop_last=True,
-    num_workers=4,
-    pin_memory=True,
 )
 
 # torchrun --nproc_per_node=8 --master_port=12341 -m scripts.train --config=cosmos_predict2/configs/base/config.py -- experiment=predict2_video2world_training_2b_agibot_head_center_fisheye_color

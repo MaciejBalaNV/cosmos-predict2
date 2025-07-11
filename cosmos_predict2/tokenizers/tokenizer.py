@@ -30,7 +30,8 @@ __all__ = [
 ]
 
 CACHE_T = 2
-
+import os
+COMPILE_ENCODE = bool(os.getenv("COMPILE_ENCODE", 0))
 
 class CausalConv3d(nn.Conv3d):
     """
@@ -750,7 +751,7 @@ class TokenizerInterface(VideoTokenizerInterface):
     def reset_dtype(self):
         pass
 
-    # @torch.compile(dynamic=False); it will significantly slow down the training job
+    @torch.compile(dynamic=False, disable=not COMPILE_ENCODE)
     def encode(self, state: torch.Tensor) -> torch.Tensor:
         latents = self.model.encode(state)
         num_frames = latents.shape[2]
