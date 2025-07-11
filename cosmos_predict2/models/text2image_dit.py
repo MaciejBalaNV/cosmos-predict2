@@ -42,17 +42,17 @@ from imaginaire.utils import log
 from imaginaire.utils.graph import create_cuda_graph
 import os
 
-SAVE_ALL_GEMM_ATTN = bool(os.getenv("SAVE_GEMM_ATTN", 0))
+RECOMPUTE_ALL_GEMM_ATTN = bool(int(os.getenv("RECOMPUTE_GEMM_ATTN", 0)))
 
 # selective activation checkpoint; only apply to the minimal v4 model. if there are change in the networks, some policy will not work as we expect.
 def predict2_2B_720_context_fn():
     op_count = collections.defaultdict(int)
 
     def policy_fn(ctx, func, *args, **kwargs):
+        if RECOMPUTE_ALL_GEMM_ATTN:
+            return CheckpointPolicy.PREFER_RECOMPUTE
         mode = "recompute" if ctx.is_recompute else "forward"
         if func == torch.ops.aten.mm.default:
-            if SAVE_ALL_GEMM_ATTN:
-                return CheckpointPolicy.MUST_SAVE
             op_count_key = f"{mode}_mm_count"
             # from imaginaire.utils import log
             # log.info(f"op_count_key: {op_count_key}, op_count[op_count_key]: {op_count[op_count_key]}, {args[0].shape}, {args[1].shape}")
@@ -61,8 +61,6 @@ def predict2_2B_720_context_fn():
             if op_count[op_count_key] > 8:  # recompute self attn first 3 linear layers
                 return CheckpointPolicy.MUST_SAVE
         if "flash_attn" in str(func):
-            if SAVE_ALL_GEMM_ATTN:
-                return CheckpointPolicy.MUST_SAVE
             op_count_key = f"{mode}_flash_attn_count"
             op_count[op_count_key] = (op_count[op_count_key] + 1) % 2
             if op_count[op_count_key]:

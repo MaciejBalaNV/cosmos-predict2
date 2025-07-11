@@ -31,7 +31,7 @@ __all__ = [
 
 CACHE_T = 2
 import os
-COMPILE_ENCODE = bool(os.getenv("COMPILE_ENCODE", 0))
+COMPILE_ENCODE = bool(int(os.getenv("COMPILE_ENCODE", 0)))
 
 class CausalConv3d(nn.Conv3d):
     """

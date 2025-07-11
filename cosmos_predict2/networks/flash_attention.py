@@ -15,7 +15,7 @@
 
 import torch
 import os
-FA2_ONLY = bool(os.getenv("FA2_ONLY", 0))
+FA2_ONLY = bool(int(os.getenv("FA2_ONLY", 0)))
 try:
     from flash_attn_3.flash_attn_interface import flash_attn_varlen_func
 
